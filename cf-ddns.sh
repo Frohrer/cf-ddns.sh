@@ -184,7 +184,7 @@ lookup_zone_id () {
         exit 1
     fi
 
-    zones=`${curl_command} -s -X GET "${cf_api_url}/zones?name=${zname}" -H "X-Auth-Email: ${cf_email}" -H "X-Auth-Key: ${cf_api_key}" -H "Content-Type: application/json"`
+    zones=`${curl_command} -s -X GET "${cf_api_url}/zones?name=${zname}" -H "X-Auth-Email: ${cf_email}" -H "Authorization: Bearer ${cf_api_key}" -H "Content-Type: application/json"`
 
     if [ ! "${zones}" ]; then
         echo "Request to API failed during zone lookup."
@@ -238,7 +238,7 @@ get_record_id () {
         set_zone_id $zone_name
     fi
 
-    records=`${curl_command} -s -X GET "${cf_api_url}/zones/${zone_id}/dns_records?name=${record_name}&type=A" -H "X-Auth-Email: ${cf_email}" -H "X-Auth-Key: ${cf_api_key}" -H "Content-Type: application/json"`
+    records=`${curl_command} -s -X GET "${cf_api_url}/zones/${zone_id}/dns_records?name=${record_name}&type=A" -H "X-Auth-Email: ${cf_email}" -H "Authorization: Bearer ${cf_api_key}" -H "Content-Type: application/json"`
 
     if [ ! "${records}" ]; then
         echo "Request to API failed during record lookup."
@@ -266,7 +266,7 @@ get_record_id () {
 
 do_record_update () {
     # Perform record update
-    api_dns_update=`${curl_command} -s -X PUT "${cf_api_url}/zones/${zone_id}/dns_records/${record_id}" -H "X-Auth-Email: ${cf_email}" -H "X-Auth-Key: ${cf_api_key}" -H "Content-Type: application/json" --data "{\"id\":\"${zone_id}\",\"type\":\"A\",\"name\":\"${record_name}\",\"content\":\"${WAN_addr}\"}"`
+    api_dns_update=`${curl_command} -s -X PUT "${cf_api_url}/zones/${zone_id}/dns_records/${record_id}" -H "X-Auth-Email: ${cf_email}" -H "Authorization: Bearer ${cf_api_key}" -H "Content-Type: application/json" --data "{\"id\":\"${zone_id}\",\"type\":\"A\",\"name\":\"${record_name}\",\"content\":\"${WAN_addr}\"}"`
 
     if [ ! "${api_dns_update}" ]; then
         echo "There was a problem communicating with the API server. Check your connectivity and parameters."
