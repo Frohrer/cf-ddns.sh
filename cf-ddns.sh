@@ -1,6 +1,10 @@
 #!/bin/sh
-# cf-ddns.sh - https://github.com/gstuartj/cf-ddns.sh/
+PATH=${PATH}:/usr/local/bin/
+export PATH
+# cf-ddns.sh - https://github.com/frohrer/cf-ddns.sh/
+# Original by https://github.com/gstuartj
 # A minimal, portable DDNS client for CloudFlare API v4 meant for use w/ cron
+# Modified by frohrer with enhancements
 # Requires: curl (w/ HTTPS support), grep, awk
 
 helptext=`cat << ENDHELP
@@ -266,7 +270,7 @@ get_record_id () {
 
 do_record_update () {
     # Perform record update
-    api_dns_update=`${curl_command} -s -X PUT "${cf_api_url}/zones/${zone_id}/dns_records/${record_id}" -H "X-Auth-Email: ${cf_email}" -H "Authorization: Bearer ${cf_api_key}" -H "Content-Type: application/json" --data "{\"id\":\"${zone_id}\",\"type\":\"A\",\"name\":\"${record_name}\",\"content\":\"${WAN_addr}\",\"ttl\":120,\"proxied\":true}"`
+    api_dns_update=`${curl_command} -s -X PUT "${cf_api_url}/zones/${zone_id}/dns_records/${record_id}" -H "X-Auth-Email: ${cf_email}" -H "Authorization: Bearer ${cf_api_key}" -H "Content-Type: application/json" --data "{\"id\":\"${zone_id}\",\"type\":\"A\",\"name\":\"${record_name}\",\"content\":\"${WAN_addr}\",\"ttl\":3600,\"proxied\":false}"`
 
     if [ ! "${api_dns_update}" ]; then
         echo "There was a problem communicating with the API server. Check your connectivity and parameters."
